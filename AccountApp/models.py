@@ -1,9 +1,17 @@
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinLengthValidator
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.core.validators import RegexValidator
+class Speciality(models.Model):
+    name = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    class Meta:
+        verbose_name = 'Speciality'
+        verbose_name_plural = 'Specialities'
 
 # Create your models here.
 class User(AbstractUser):
@@ -14,6 +22,9 @@ class Doctor(User):
     phone = models.CharField(max_length=8)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    class Meta:
+        verbose_name = 'Doctor'
+        verbose_name_plural = 'Doctors'
 
     #specialities = models.ManyToManyField('AccountApp.Speciality')
     specialities = models.ManyToManyField('Speciality', related_name='doctors')
@@ -24,7 +35,7 @@ number_validator = RegexValidator(
 )
 
 def validate_birth_date(value):
-    if value >= timezone.localdatedate():
+    if value >= timezone.localdate():
         raise ValidationError('Birth date must be in the past.')
     
 class Patient(User):
@@ -34,8 +45,8 @@ class Patient(User):
     birth_date = models.DateField(validators=[validate_birth_date])
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    class Meta:
+        verbose_name = 'Patient'
+        verbose_name_plural = 'Patients'
 
-class Speciality(models.Model):
-    name = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+
